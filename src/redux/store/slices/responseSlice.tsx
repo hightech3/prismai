@@ -80,6 +80,11 @@ const responseSlice = createSlice({
     addQuery: (state, action: PayloadAction<IResponse>) => {
       state.responses.push(action.payload);
     },
+    reset: (state) => {
+      state.responses = [];
+      state.loading = false;
+      state.error = null;
+    },
     updateAnswer(state, action: PayloadAction<{ msg_id: string; answer: string, graph_data: JSON[] | null, frontier_data: JSON | null }>) {
       const { msg_id, answer, graph_data, frontier_data } = action.payload;
       const existingResponse = state.responses.find(
@@ -108,5 +113,5 @@ const responseSlice = createSlice({
   },
 });
 
-export const { addQuery, updateAnswer } = responseSlice.actions;
+export const { addQuery, updateAnswer, reset } = responseSlice.actions;
 export default responseSlice.reducer;

@@ -30,13 +30,17 @@ import { Separator } from "@/components/ui/separator";
 import { SideBarItems } from "@/conf";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { reset } from "@/redux/store/slices/responseSlice";
+import { AppDispatch } from "@/redux/store";
 
 export function AppSidebar() {
   const { open, setOpen } = useSidebar();
 
   const router = useRouter();
-
+  const dispatch = useDispatch() as AppDispatch;
+  
   const handleNewChat = () => {
+    dispatch(reset());
     router.push("/");
   }
 
