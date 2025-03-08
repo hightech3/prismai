@@ -1,0 +1,237 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-size: 14px;
+}
+
+@layer base {
+  :root {
+
+    --scrollbar-track-background: hsl(240 4.8% 95.9%);
+    --scrollbar-thumb-background: hsl(0 0% 83.1%);
+    --scrollbar-thumb-hover: hsl(0, 0%, 80%);
+
+    --sidebar-background: #fafafd;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    /* --sidebar-border: 220 13% 91%; */
+    --sidebar-border: rgb(229 229 229 / var(--tw-bg-opacity, 1));
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 0 0% 89.8%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    /* --ring: 222.2 84% 4.9%; */
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.answer-markdown {
+  a {
+    text-decoration: none;
+    color: hsl(221.2 83.2% 53.3%);
+  }
+
+  code {
+    background-color: hsl(var(--accent));
+    border-radius: calc(var(--radius) - 2px);
+    font-size: 0.875em;
+    font-weight: 500;
+    padding: 0.15rem 0.3rem;
+  }
+
+  h3 {
+    font-size: 1.25em;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  p {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 350;
+  }
+
+  ol {
+    padding-left: 1.625em;
+    margin-top: 0;
+  }
+
+  li {
+    padding-left: 0.375em;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+  }
+
+  ul {
+    padding-left: 1.625em;
+  }
+
+  menu,
+  ol,
+  ul {
+    list-style: none;
+    list-style-type: disc;
+    margin-bottom: 1.25em;
+  }
+
+  hr {
+    border-top-width: 1px;
+    margin-bottom: 3em;
+    margin-top: 3em;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  table {
+    text-indent: 0;
+    font-size: .875em;
+    width: 100%;
+    text-align: left;
+    border-spacing: 0;
+    border-collapse: separate;
+    border-radius: .375rem;
+  }
+
+  thead tr th {
+    border-color: #e5e5e5;
+    border-left-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    background-color: #f5f5f5;
+    padding-left: .75rem;
+    font-weight: 600;
+  }
+
+  thead tr th:first-child {
+    border-top-left-radius: .375rem;
+  }
+
+  thead tr th:last-child {
+    border-top-right-radius: .375rem;
+    border-right-width: 1px;
+    padding-right: .75rem;
+  }
+
+  tbody tr td {
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+    padding-left: .75rem;
+  }
+
+  tbody tr td:last-child {
+    border-right-width: 1px;
+    padding-right: .75rem;
+  }
+
+  tbody tr:last-child td:first-child {
+    border-bottom-left-radius: .375rem;
+  }
+
+  tbody tr:last-child td:last-child {
+    border-bottom-right-radius: .375rem;
+  }
+
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-background);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
