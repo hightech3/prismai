@@ -6,7 +6,7 @@ import remarkGfm from 'remark-gfm';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import { CodeBlock, codepen } from 'react-code-blocks';
 import { Label } from "@/components/ui/label";

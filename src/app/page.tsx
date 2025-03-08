@@ -1,4 +1,3 @@
-"use client";
 import { AppPrompt } from "@/components/app-prompt";
 import { AppTopbar } from "@/components/app-topbar";
 import { Label } from "@/components/ui/label";
