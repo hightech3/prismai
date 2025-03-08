@@ -32,6 +32,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { reset } from "@/redux/store/slices/responseSlice";
 import { AppDispatch } from "@/redux/store";
+import { useDispatch } from "react-redux";
 
 export function AppSidebar() {
   const { open, setOpen } = useSidebar();
