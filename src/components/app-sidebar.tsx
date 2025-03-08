@@ -30,16 +30,16 @@ import { Separator } from "@/components/ui/separator";
 import { SideBarItems } from "@/conf";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { reset } from "@/redux/store/slices/responseSlice";
 import { AppDispatch } from "@/redux/store";
 import { useDispatch } from "react-redux";
+import { reset } from "@/redux/store/slices/responseSlice";
 
 export function AppSidebar() {
   const { open, setOpen } = useSidebar();
 
   const router = useRouter();
   const dispatch = useDispatch() as AppDispatch;
-  
+
   const handleNewChat = () => {
     dispatch(reset());
     router.push("/");
@@ -49,9 +49,10 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="text-neutral-900 bg-neutral-100 border-l-0">
       <SidebarHeader>
         <SidebarMenu className={`${open ? "pl-4 pr-4" : ""}`}>
-          <Link href={"/"}>
+          <Link href={"/"} passHref>
             <SidebarMenuItem
               className={`flex justify-between items-center`}
+              onClick={handleNewChat}
             >
               {open && <Logo />}
               <Button
@@ -70,12 +71,13 @@ export function AppSidebar() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <SidebarMenuItem className="relative flex h-[50px] items-center justify-center mt-6">
+                <SidebarMenuItem className="relative flex h-[50px] items-center justify-center mt-6"
+                  onClick={handleNewChat}
+                >
                   <div className={`flex ${open ? 'w-full' : 'w-9'} h-9 justify-between items-center rounded-lg bg-neutral-200 p-2 cursor-pointer hover:shadow-sm`}>
                     {open && <h2 className={`text-[14px]`}>New query</h2>}
                     <SidebarMenuButton
                       className="justify-center bg-neutral-200 rounded-lg h-9 w-7 hover:bg-neutral-200"
-                      onClick={handleNewChat}
                     >
                       <PlusIcon className="w-full fill-black" />
                     </SidebarMenuButton>

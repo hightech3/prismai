@@ -37,12 +37,10 @@ export const fetchResponse = createAsyncThunk(
         const { value, done: isDone } = await reader.read();
         done = isDone;
         if (!done) {
-          console.log("💡value",value);
           if (value?.includes('{"weights":')) {
             let first_num = value.indexOf('{"weights":');
             let second_num = value.indexOf('}]') + 2;
             graph_data = JSON.parse(value.substring(first_num, second_num) + '}').weights;
-            console.log("💡graph_data",graph_data);
 
             answer += value.substring(0, first_num);
           }
@@ -50,7 +48,6 @@ export const fetchResponse = createAsyncThunk(
             let first_num = value.indexOf('"frontier":') + 12;
             let second_num = value.indexOf('}}}') + 2;
             frontier_data = JSON.parse(value.substring(first_num, second_num));
-            console.log("💡frontier_data",frontier_data);
             answer += value.substring(second_num);
           }
           else {
