@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.2",
@@ -42,6 +44,7 @@
     "uuid": "^11.0.3"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.9",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
