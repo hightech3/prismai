@@ -2,6 +2,9 @@ import { BASE_URL } from "@/conf";
 import { IResponse } from "@/types";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
+// Define a type for our frontier data
+type FrontierData = Record<string, number[]>;
+
 interface ResponseState {
   responses: IResponse[];
   loading: boolean;
@@ -13,6 +16,25 @@ const initialState: ResponseState = {
   loading: false,
   error: null
 };
+
+function splitStringAlt(inputString: string) {
+  const startMarker = '{"weights":';
+  const endMarker = '}}}';
+
+  const startIndex = inputString.indexOf(startMarker);
+  if (startIndex === -1) return { firstPart: inputString, secondPart: '', thirdPart: '' };
+
+  const endIndex = inputString.indexOf(endMarker, startIndex);
+  if (endIndex === -1) return { firstPart: inputString.substring(0, startIndex), secondPart: inputString.substring(startIndex), thirdPart: '' };
+
+  const endPosition = endIndex + endMarker.length;
+
+  return {
+    firstPart: inputString.substring(0, startIndex),
+    secondPart: inputString.substring(startIndex, endPosition),
+    thirdPart: inputString.substring(endPosition)
+  };
+}
 
 export const fetchResponse = createAsyncThunk(
   "responses/fetchResponse",
@@ -31,32 +53,44 @@ export const fetchResponse = createAsyncThunk(
       const reader = gptStream.body.pipeThrough(decoder).getReader();
       let answer = "";
       let done = false;
-      let graph_data: JSON[] | null = null;
+      let graph_data: JSON[] = [];
+      // let weights: JSON[] = [];
       let frontier_data: JSON | null = null;
       while (!done) {
         const { value, done: isDone } = await reader.read();
         done = isDone;
-        if (!done) {
-          if (value?.includes('{"weights":')) {
-            let first_num = value.indexOf('{"weights":');
-            let second_num = value.indexOf('}]') + 2;
-            graph_data = JSON.parse(value.substring(first_num, second_num) + '}').weights;
+        if (done) {
+          dispatch(updateAnswer({ msg_id, answer, graph_data, frontier_data }));
+          break;
+        };
 
-            answer += value.substring(0, first_num);
-          }
-          if (value?.includes('"frontier":')) {
-            let first_num = value.indexOf('"frontier":') + 12;
-            let second_num = value.indexOf('}}}') + 2;
-            frontier_data = JSON.parse(value.substring(first_num, second_num));
-            answer += value.substring(second_num);
-          }
-          else {
-            answer += value;
+        if (value?.startsWith('w: ')) {
+          const weight = JSON.parse(value.replace('w: ', ''));
+          graph_data.push(weight);
+        } else if (value?.includes('f: ')) {
+          const frontierString = value.split('f: ')[1]; // Example: "0:[1,2,4]"
+          try {
+            const colonIndex = frontierString.indexOf(':');
+            if (colonIndex !== -1) {
+              const key = frontierString.substring(0, colonIndex); // "0"
+              const valueArray = JSON.parse(frontierString.substring(colonIndex + 1)); // [1,2,4]
+              if (frontier_data === null) {
+                frontier_data = {} as JSON;
+              }
+              frontier_data = {
+                ...frontier_data,
+                [key]: valueArray
+              } as JSON;
+            }
+          } catch (e) {
+            console.error("Error parsing frontier data:", e);
           }
         }
-        dispatch(updateAnswer({ msg_id, answer, graph_data, frontier_data }));
+        else {
+          answer += value;
+        }
+        dispatch(updateAnswer({ msg_id, answer, graph_data: null, frontier_data: null }));
       }
-
       return {
         query,
         answer,
