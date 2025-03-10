@@ -1,4 +1,5 @@
 import { AppPrompt } from "@/components/app-prompt";
+import { AppScrollbottom } from "@/components/app-scroll-bottom";
 import { AppTopbar } from "@/components/app-topbar";
 
 export default function AssistantLayout({
@@ -14,6 +15,7 @@ export default function AssistantLayout({
                 {children}
             </div>
             <div className='relative flex flex-none flex-col w-full items-center px-6 mt-0 h-auto'>
+                <AppScrollbottom />
                 <AppPrompt />
             </div>
         </div>

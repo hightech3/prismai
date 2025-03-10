@@ -12,6 +12,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { IResponse } from "@/types";
 import { addQuery, fetchResponse } from "@/redux/store/slices/responseSlice";
 import { useRouter } from "next/navigation";
+import { useScroll } from "@/providers/scroll-provider";
 
 export function AppPrompt() {
 
@@ -23,12 +24,12 @@ export function AppPrompt() {
 
   const dispatch = useDispatch() as AppDispatch;
   const router = useRouter();
+  const { handleButtonClick } = useScroll();
 
   const handleSubmit = async () => {
     const user_query = query.trim();
     setQuery('');
     if (user_query) {
-      handleScrollBottom();
       const msg_id = uuidv4();
       const temporaryResponse: IResponse = {
         id: msg_id,
@@ -37,19 +38,10 @@ export function AppPrompt() {
       };
       dispatch(addQuery(temporaryResponse));
       router.push("/assistant");
+      handleButtonClick();
       await dispatch(fetchResponse({ query: user_query, msg_id })).unwrap();
     }
   };
-
-  const handleScrollBottom = () => {
-    const scrollableContainer = document.getElementById("AppScrollableContainer");
-    if (scrollableContainer) {
-        scrollableContainer.scrollTo({
-            top: scrollableContainer.scrollHeight,
-            behavior: "smooth",
-        });
-    }
-  }
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter') {

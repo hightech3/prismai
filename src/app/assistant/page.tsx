@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import PieChartComponent from "@/components/ui/pie-chart";
 import StackedAreaChart from "@/components/ui/area-chart";
 import { useScroll } from "@/providers/scroll-provider";
+import { cn } from "@/lib/utils";
 type Block = TextBlock | CodeBlock;
 type TextBlock = { type: 'text'; content: string; };
 type CodeBlock = { type: 'code'; content: string; language: string; complete: boolean; code: string; };
@@ -73,55 +74,65 @@ const ChatGPTResponseRenderer = ({ response }: { response: any }) => {
 export default function AssistantPage() {
 
     const { responses } = useSelector((state: RootState) => state.responses);
-
-    const lastMessageRef = useRef<HTMLDivElement | null>(null);
+    const { handleScroll, scrollableContainerRef, handleButtonClick } = useScroll();
 
     useEffect(() => {
-        if (lastMessageRef.current) {
-            lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+        const scrollableContainer = scrollableContainerRef.current;
+        if (scrollableContainer) {
+            handleButtonClick();
+            scrollableContainer.addEventListener("scroll", handleScroll);
         }
-    }, [responses]);
+
+        return () => {
+            if (scrollableContainer) {
+                scrollableContainer.removeEventListener("scroll", handleScroll);
+            }
+        };
+    }, []);
 
     return (
-        <div id="AppScrollableContainer" className="flex-1 h-full w-full max-w-[720px] mx-auto pb-56 text-neutral-900 space-y-8">
-            {
-                responses.map((response, index) => (
-                    <div key={index}>
-                        {
-                            response.query && (
-                                <div className="flex flex-row justify-end">
-                                    <div className="self-end bg-neutral-100 rounded-3xl py-4 px-4 max-w-[600px]">
-                                        <p className="text-[16px]">
-                                            {response.query}
-                                        </p>
+        <div className={cn(`relative flex-1 h-full w-full text-neutral-900 items-center justify-center`)}>
+            <div id="AppScrollableContainer" ref={scrollableContainerRef} className={`flex items-start justify-center overflow-y-auto h-full px-6 pr-[18px]`}>
+                <div className={`flex flex-col w-full max-w-[720px]`}>
+                    {
+                        responses.map((response, index) => (
+                            <div key={index}>
+                                {
+                                    response.query && (
+                                        <div className="flex flex-row justify-end">
+                                            <div className="self-end bg-neutral-100 rounded-3xl py-4 px-4 max-w-[600px]">
+                                                <p className="text-[16px]">
+                                                    {response.query}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                                <div>
+                                    <div className="flex flex-row p-2 gap-2 items-center">
+                                        <BrainIcon className="w-4 h-4" />
+                                        <span className="scroll-m-20 text-xl font-medium tracking-tight transition-colors first:mt-0">
+                                            Answer
+                                        </span>
                                     </div>
-                                </div>
-                            )
-                        }
-                        <div>
-                            <div className="flex flex-row p-2 gap-2 items-center">
-                                <BrainIcon className="w-4 h-4" />
-                                <span className="scroll-m-20 text-xl font-medium tracking-tight transition-colors first:mt-0">
-                                    Answer
-                                </span>
-                            </div>
-                            {
-                                response.answer ? (<ChatGPTResponseRenderer response={response} />
-                                ) : (
-                                    <div className="space-y-2">
-                                        <Skeleton className="h-4 w-[100%] rounded-xl" />
-                                        <Skeleton className="h-4 w-[80%] rounded-xl" />
-                                        <Skeleton className="h-4 w-[60%] rounded-xl" />
-                                        <Skeleton className="h-4 w-[40%] rounded-xl" />
-                                    </div>
-                                )
-                            }
+                                    {
+                                        response.answer ? (<ChatGPTResponseRenderer response={response} />
+                                        ) : (
+                                            <div className="space-y-2">
+                                                <Skeleton className="h-4 w-[100%] rounded-xl" />
+                                                <Skeleton className="h-4 w-[80%] rounded-xl" />
+                                                <Skeleton className="h-4 w-[60%] rounded-xl" />
+                                                <Skeleton className="h-4 w-[40%] rounded-xl" />
+                                            </div>
+                                        )
+                                    }
 
-                        </div>
-                    </div>
-                ))
-            }
-            <div ref={lastMessageRef} id="last-message" />
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
         </div >
     )
 }
