@@ -90,14 +90,14 @@ export default function AssistantPage() {
     }, [responses]);
 
     return (
-        <div className="flex-1 h-full w-full max-w-[720px] mx-auto pb-56 text-neutral-900">
+        <div className="flex-1 h-full w-full max-w-[720px] mx-auto pb-56 text-neutral-900 space-y-8">
             {
                 responses.map((response, index) => (
                     <div key={index}>
                         {
                             response.query && (
                                 <div className="flex flex-row justify-end">
-                                    <div className="self-end bg-neutral-100 rounded-3xl py-2 px-4 max-w-[600px]">
+                                    <div className="self-end bg-neutral-100 rounded-3xl py-4 px-4 max-w-[600px]">
                                         <p className="text-[16px]">
                                             {response.query}
                                         </p>
