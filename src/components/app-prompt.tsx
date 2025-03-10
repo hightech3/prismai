@@ -101,7 +101,7 @@ export function AppPrompt() {
             className="rounded-full bg-neutral-950 hover:bg-neutral-800 w-7 h-7"
             disabled={loading || query.trim() === ''}
           >
-            {loading ? <StopCircle className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" color="white" />}
+            {loading ? <StopCircle className="h-4 w-4" color="white" /> : <ArrowRight className="h-4 w-4" color="white" />}
           </Button>
         </div>
       </div>
