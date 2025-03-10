@@ -74,14 +74,7 @@ export default function AssistantPage() {
 
     const { responses } = useSelector((state: RootState) => state.responses);
 
-    const lastMessageRef = useRef<HTMLDivElement>(null);
-    // const exampleResponses = [
-    //     {
-    //         query: "What is the capital of France?",
-    //         answer: "The capital of France is Paris."
-    //     },
-
-    // ];
+    const lastMessageRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if (lastMessageRef.current) {
@@ -90,7 +83,7 @@ export default function AssistantPage() {
     }, [responses]);
 
     return (
-        <div className="flex-1 h-full w-full max-w-[720px] mx-auto pb-56 text-neutral-900 space-y-8">
+        <div id="AppScrollableContainer" className="flex-1 h-full w-full max-w-[720px] mx-auto pb-56 text-neutral-900 space-y-8">
             {
                 responses.map((response, index) => (
                     <div key={index}>
