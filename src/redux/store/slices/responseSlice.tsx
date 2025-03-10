@@ -14,25 +14,6 @@ const initialState: ResponseState = {
   error: null
 };
 
-function splitStringAlt(inputString: string) {
-  const startMarker = '{"weights":';
-  const endMarker = '}}}';
-
-  const startIndex = inputString.indexOf(startMarker);
-  if (startIndex === -1) return { firstPart: inputString, secondPart: '', thirdPart: '' };
-
-  const endIndex = inputString.indexOf(endMarker, startIndex);
-  if (endIndex === -1) return { firstPart: inputString.substring(0, startIndex), secondPart: inputString.substring(startIndex), thirdPart: '' };
-
-  const endPosition = endIndex + endMarker.length;
-
-  return {
-    firstPart: inputString.substring(0, startIndex),
-    secondPart: inputString.substring(startIndex, endPosition),
-    thirdPart: inputString.substring(endPosition)
-  };
-}
-
 export const fetchResponse = createAsyncThunk(
   "responses/fetchResponse",
   async ({ query, msg_id }: { query: string; msg_id: string }, { rejectWithValue, dispatch }) => {
@@ -51,7 +32,6 @@ export const fetchResponse = createAsyncThunk(
       let answer = "";
       let done = false;
       let graph_data: JSON[] = [];
-      // let weights: JSON[] = [];
       let frontier_data: JSON | null = null;
       while (!done) {
         const { value, done: isDone } = await reader.read();
@@ -65,12 +45,12 @@ export const fetchResponse = createAsyncThunk(
           const weight = JSON.parse(value.replace('w: ', ''));
           graph_data.push(weight);
         } else if (value?.includes('f: ')) {
-          const frontierString = value.split('f: ')[1]; // Example: "0:[1,2,4]"
+          const frontierString = value.split('f: ')[1];
           try {
             const colonIndex = frontierString.indexOf(':');
             if (colonIndex !== -1) {
-              const key = frontierString.substring(0, colonIndex); // "0"
-              const valueArray = JSON.parse(frontierString.substring(colonIndex + 1)); // [1,2,4]
+              const key = frontierString.substring(0, colonIndex);
+              const valueArray = JSON.parse(frontierString.substring(colonIndex + 1));
               if (frontier_data === null) {
                 frontier_data = {} as JSON;
               }
