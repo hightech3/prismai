@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftToLineIcon, ArrowRightToLineIcon, PlusIcon } from "lucide-react";
+import { ArrowLeftToLineIcon, ArrowRightToLineIcon, PlusIcon, Settings } from "lucide-react";
 
 import {
   Sidebar,
@@ -46,7 +46,7 @@ export function AppSidebar() {
   }
 
   return (
-    <Sidebar collapsible="icon" className="text-neutral-900 bg-neutral-100 border-l-0">
+    <Sidebar collapsible="icon" className="text-neutral-900 bg-neutral-100 border-none">
       <SidebarHeader>
         <SidebarMenu className={`${open ? "pl-4 pr-4" : ""}`}>
           <Link href={"/"} passHref>
@@ -71,11 +71,11 @@ export function AppSidebar() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <SidebarMenuItem className="relative flex h-[50px] items-center justify-center mt-6"
+                <SidebarMenuItem className={`relative flex h-[50px] items-center justify-center ${!open && 'mt-6'}`}
                   onClick={handleNewChat}
                 >
                   <div className={`flex ${open ? 'w-full' : 'w-9'} h-9 justify-between items-center rounded-lg bg-neutral-200 p-2 cursor-pointer hover:shadow-sm`}>
-                    {open && <h2 className={`text-[14px]`}>New query</h2>}
+                    {open && <h2 className={`text-[14px]`}>New Chat</h2>}
                     <SidebarMenuButton
                       className="justify-center bg-neutral-200 rounded-lg h-9 w-7 hover:bg-neutral-200"
                     >
@@ -85,7 +85,7 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               </TooltipTrigger>
               <TooltipContent side="right" className={`${open ? 'hidden' : 'flex'} bg-[#333] text-background`}>
-                <p>New query</p>
+                <p>New Chat</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -125,7 +125,7 @@ export function AppSidebar() {
       </SidebarContent>
       <Separator className="bg-neutral-200" />
       <SidebarFooter className={`py-3 ${open ? "pl-4 pr-4" : "pl-6"}`}>
-        <SidebarMenu className="w-full">
+        {/* <SidebarMenu className="w-full">
           <SidebarMenuItem className="w-full flex gap-2 items-center">
             <Button className="rounded-full size-8 font-medium text-md flex justify-center">
               <span>BC</span>
@@ -136,7 +136,7 @@ export function AppSidebar() {
               </Label>
             )}
           </SidebarMenuItem>
-        </SidebarMenu>
+        </SidebarMenu> */}
       </SidebarFooter>
     </Sidebar>
   );

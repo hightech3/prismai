@@ -6,22 +6,23 @@ import { useState } from "react";
 import { Textarea } from "./ui/textarea";
 import { v4 as uuidv4 } from 'uuid';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Mic, PaperclipIcon } from "lucide-react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import { ArrowRight, Mic, PaperclipIcon, StopCircle } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import { IResponse } from "@/types";
 import { addQuery, fetchResponse } from "@/redux/store/slices/responseSlice";
 import { useRouter } from "next/navigation";
-import { useScroll } from "@/providers/scroll-provider";
 
 export function AppPrompt() {
+
+  const { loading } = useSelector((state: RootState) => state.responses);
   const [query, setQuery] = useState<string>("");
   const [rows, setRows] = useState<number>(3);
   const MAX_ROWS = 8;
   const INITIAL_ROWS = 3;
+
   const dispatch = useDispatch() as AppDispatch;
   const router = useRouter();
-  const { handleScrollBottom } = useScroll();
 
   const handleSubmit = async () => {
     const user_query = query.trim();
@@ -37,7 +38,13 @@ export function AppPrompt() {
       dispatch(addQuery(temporaryResponse));
       router.push("/assistant");
       await dispatch(fetchResponse({ query: user_query, msg_id })).unwrap();
-      handleScrollBottom();
+    }
+  };
+
+  const handleScrollBottom = () => {
+    const lastMessage = document.getElementById("last-message");
+    if (lastMessage) {
+      lastMessage.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -68,10 +75,13 @@ export function AppPrompt() {
         }}
         onKeyDown={handleKeyPress}
         rows={rows}
+        disabled={loading}
       />
       <div className="flex items-center justify-between bg-neutral-100 px-2 pb-2 max-sm:flex-col rounded-b-3xl">
         <div className="flex space-x-0 md:space-x-2">
-          <Button variant="ghost" size="icon" className="rounded-full bg-neutral-200 hover:bg-neutral-300 w-7 h-7">
+          <Button variant="ghost" size="icon" className="rounded-full bg-neutral-200 hover:bg-neutral-300 w-7 h-7"
+            disabled
+          >
             <PaperclipIcon className="h-4 w-4" />
           </Button>
         </div>
@@ -79,17 +89,19 @@ export function AppPrompt() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={handleSubmit}
-            className="rounded-full bg-neutral-200 hover:bg-neutral-300 w-7 h-7"
+            className="rounded-full bg-neutral-950 hover:bg-neutral-800 w-7 h-7"
+            disabled
           >
-            <ArrowRight className="h-4 w-4" />
+            <Mic className="h-4 w-4" color="white" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="rounded-full bg-neutral-200 hover:bg-neutral-300 w-7 h-7"
+            onClick={handleSubmit}
+            className="rounded-full bg-neutral-950 hover:bg-neutral-800 w-7 h-7"
+            disabled={loading}
           >
-            <Mic className="h-4 w-4" />
+            {loading ? <StopCircle className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" color="white" />}
           </Button>
         </div>
       </div>

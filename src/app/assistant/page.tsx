@@ -6,7 +6,7 @@ import remarkGfm from 'remark-gfm';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { CodeBlock, codepen } from 'react-code-blocks';
 import { Label } from "@/components/ui/label";
@@ -63,9 +63,9 @@ const ChatGPTResponseRenderer = ({ response }: { response: any }) => {
                     )
                 ))
             }
-            {response.graph_data && <div className="flex flex-col items-center"> <Label className={`text-lg`}>Allocation Weights</Label> <PieChartComponent data={response.graph_data} /></div>}
+            {response.graph_data && response.graph_data.length > 0 && <div className="flex flex-col items-center"> <Label className={`text-lg`}>Allocation Weights</Label> <PieChartComponent data={response.graph_data} /></div>}
 
-            {response.frontier_data && <div className="flex flex-col items-center"> <Label className={`text-lg`}>Frontier Chat</Label> <StackedAreaChart data={Object.values(response.frontier_data)} /> </div>}
+            {response.frontier_data && <div className="flex flex-col items-center"> <Label className={`text-lg`}>Frontier Chart</Label> <StackedAreaChart data={Object.values(response.frontier_data)} /> </div>}
         </div>
     );
 };
@@ -74,64 +74,46 @@ export default function AssistantPage() {
 
     const { responses } = useSelector((state: RootState) => state.responses);
 
-    const [copied, setCopied] = useState<boolean>(false);
-    const { scrollableContainerRef } = useScroll();
+    const lastMessageRef = useRef<HTMLDivElement>(null);
+    // const exampleResponses = [
+    //     {
+    //         query: "What is the capital of France?",
+    //         answer: "The capital of France is Paris."
+    //     },
 
-    const handleCopy = (content: string) => {
-        navigator.clipboard.writeText(content)
-            .then(() => {
-                setCopied(true);
-                setTimeout(() => {
-                    setCopied(false);
-                }, 1000);
-            })
-            .catch(err => {
-                console.error('Failed to copy text: ', err)
-            })
-    }
+    // ];
+
+    useEffect(() => {
+        if (lastMessageRef.current) {
+            lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [responses]);
 
     return (
-        <div ref={scrollableContainerRef} className="flex-1 h-full w-full max-w-[720px] mx-auto pb-56 text-neutral-900">
+        <div className="flex-1 h-full w-full max-w-[720px] mx-auto pb-56 text-neutral-900">
             {
                 responses.map((response, index) => (
                     <div key={index}>
                         {
                             response.query && (
-                                <h2 className="text-xl p-2">
-                                    {response.query}
-                                </h2>
+                                <div className="flex flex-row justify-end">
+                                    <div className="self-end bg-neutral-100 rounded-3xl py-2 px-4 max-w-[600px]">
+                                        <p className="text-[16px]">
+                                            {response.query}
+                                        </p>
+                                    </div>
+                                </div>
                             )
                         }
                         <div>
                             <div className="flex flex-row p-2 gap-2 items-center">
-                                <BrainIcon />
+                                <BrainIcon className="w-4 h-4" />
                                 <span className="scroll-m-20 text-xl font-medium tracking-tight transition-colors first:mt-0">
                                     Answer
                                 </span>
                             </div>
                             {
-                                response.answer ? (
-                                    <>
-                                        <ChatGPTResponseRenderer response={response} />
-                                        <section className="flex flex-row justify-between px-2 py-4 pb-8">
-                                            <section className="flex flex-row gap-2">
-                                                <Share2Icon className="w-4 h-4" />
-                                                <RefreshCwIcon className="w-4 h-4" />
-                                            </section>
-                                            <section className="flex flex-row gap-3 cursor-pointer">
-                                                <ThumbsUpIcon className="w-4 h-4" />
-                                                <ThumbsDownIcon className="w-4 h-4" />
-                                                {
-                                                    copied ? (
-                                                        <CheckIcon className="w-4 h-4 hover:opacity-70" />
-                                                    ) : (
-                                                        <CopyIcon className="w-4 h-4 hover:opacity-70" onClick={() => { handleCopy(response.answer) }} />
-                                                    )
-                                                }
-                                                < MoreHorizontalIcon className="w-4 h-4" />
-                                            </section>
-                                        </section>
-                                    </>
+                                response.answer ? (<ChatGPTResponseRenderer response={response} />
                                 ) : (
                                     <div className="space-y-2">
                                         <Skeleton className="h-4 w-[100%] rounded-xl" />
@@ -141,10 +123,12 @@ export default function AssistantPage() {
                                     </div>
                                 )
                             }
+
                         </div>
                     </div>
                 ))
             }
+            <div ref={lastMessageRef} id="last-message" />
         </div >
     )
 }

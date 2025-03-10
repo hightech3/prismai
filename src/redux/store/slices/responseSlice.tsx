@@ -2,9 +2,6 @@ import { BASE_URL } from "@/conf";
 import { IResponse } from "@/types";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
-// Define a type for our frontier data
-type FrontierData = Record<string, number[]>;
-
 interface ResponseState {
   responses: IResponse[];
   loading: boolean;
